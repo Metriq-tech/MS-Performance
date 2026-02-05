@@ -34,6 +34,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         .material-symbols-outlined {
@@ -45,8 +46,65 @@
         }
 
         .backdrop-blur-md {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 40s linear infinite;
+        }
+
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        .mask-fade-x {
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .hero-gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #ff8a8a 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-hover-effect {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-hover-effect:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.2);
         }
     </style>
 
@@ -82,10 +140,10 @@
             }, []);
 
             return (
-                <header className={`sticky top-0 z-50 w-full border-b border-solid border-[#e7ebf3] dark:border-gray-800 transition-all ${scrolled ? 'bg-white/95 dark:bg-background-dark/95 py-2 shadow-sm' : 'bg-white/80 dark:bg-background-dark/80 py-3'} backdrop-blur-md`}>
+                <header className={`sticky top-0 z-50 w-full border-b border-solid border-[#e7ebf3] dark:border-gray-800 transition-all duration-500 ${scrolled ? 'bg-white/95 dark:bg-[#0d121b]/95 py-2 shadow-lg backdrop-blur-xl' : 'bg-white/80 dark:bg-background-dark/80 py-5'} backdrop-blur-md`}>
                     <div className="mx-auto max-w-[1280px] px-6 lg:px-10 flex items-center justify-between">
                         <Link to="/" className="flex items-center gap-3">
-                            <img src="pictures/MS-Performance-Logo-neu.jpg" alt="MS Performance" className="h-30 w-auto object-contain" />
+                            <img src="pictures/MS-Performance-Logo-neu.jpg" alt="MS Performance" className={`transition-all duration-500 ${scrolled ? 'h-10' : 'h-16'} w-auto object-contain`} />
                         </Link>
 
                         <nav className="hidden md:flex items-center gap-8 lg:gap-10">
@@ -136,7 +194,7 @@
                 <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         <div className="flex items-center gap-3">
-                            <img src="pictures/MS-Performance-Logo-neu.jpg" alt="MS Performance" className="h-18 w-auto opacity-80" />
+                            <img src="pictures/MS-Performance-Logo-neu.jpg" alt="MS Performance" className="h-12 w-auto opacity-80" />
                         </div>
                         <div className="flex flex-wrap justify-center gap-8 text-sm font-medium text-[#4c669a] dark:text-gray-400">
                             <a className="hover:text-primary transition-colors" href="#">Impressum</a>
@@ -215,8 +273,10 @@
                                     <span className="text-white text-xs font-bold tracking-wide uppercase">5.0 Google Bewertung</span>
                                 </div>
 
-                                <h1 className="text-4xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight mb-8">Ihre Autowerkstatt in Hamburg</h1>
-                                <p className="text-lg lg:text-2xl text-gray-200 font-medium mb-12 max-w-xl">Professioneller Service für alle Marken. Schnell, zuverlässig und fair. Ihr Vertrauen ist unser Antrieb.</p>
+                                <h1 className="text-4xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight mb-8">
+                                    Ihre <span className="hero-gradient-text">Autowerkstatt</span> in Hamburg
+                                </h1>
+                                <p className="text-lg lg:text-2xl text-gray-200 font-medium mb-12 max-w-xl">Professioneller Service für alle Marken. <br /> Schnell, zuverlässig und fair. <br />Ihr Vertrauen ist unser Antrieb.</p>
                                 <div className="flex flex-col sm:flex-row gap-5">
                                     <button onClick={() => navigate('/kontakt')} className="flex min-w-[220px] items-center justify-center rounded-lg h-16 px-10 bg-primary text-white text-lg font-bold tracking-wide hover:scale-[1.03] transition-all shadow-xl shadow-primary/30">Jetzt Termin vereinbaren</button>
                                     <button onClick={() => navigate('/inspektion')} className="flex min-w-[220px] items-center justify-center rounded-lg h-16 px-10 bg-white/10 backdrop-blur-md text-white border border-white/20 text-lg font-bold tracking-wide hover:bg-white/20 transition-all">Unsere Leistungen</button>
@@ -226,9 +286,11 @@
                     </section>
 
                     <section className="mx-auto max-w-[1280px] px-6 lg:px-10 py-12">
-                        <div className="flex flex-col gap-2 mb-10">
-                            <h2 className="text-3xl font-bold tracking-tight text-[#0d121b] dark:text-white">Unsere Leistungen</h2>
-                            <div className="h-1 w-20 bg-primary rounded-full"></div>
+                        <div className="flex flex-col gap-2 mb-12">
+                            <h2 className="text-3xl lg:text-4xl font-black tracking-tight text-[#0d121b] dark:text-white uppercase italic">
+                                Unsere <span className="text-primary">Leistungen</span>
+                            </h2>
+                            <div className="h-1.5 w-24 bg-primary rounded-full"></div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {[
@@ -239,7 +301,7 @@
                                 { title: 'Anhängerservice', icon: 'rv_hookup', path: '/anhaengerreparatur', desc: 'Profi-Wartung für Ihren Anhänger.', img: 'Mock-Bilder/anhaengerservice.avif' },
                                 { title: 'Kontakt', icon: 'location_on', path: '/kontakt', desc: 'Besuchen Sie uns in Hamburg-Harburg.', img: 'Mock-Bilder/kontakt.avif' }
                             ].map((s, i) => (
-                                <Link to={s.path} key={i} className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 hover:shadow-2xl transition-all duration-300">
+                                <Link to={s.path} key={i} className="group card-hover-effect flex flex-col overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50">
                                     <div className="h-48 overflow-hidden">
                                         <img src={s.img} alt={s.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                     </div>
@@ -283,39 +345,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                                <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                                    <div className="flex text-yellow-500 mb-4">
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                    </div>
-                                    <p className="italic font-medium mb-4">"Hervorragender Service! Mein BMW wurde innerhalb eines Tages repariert. Transparent und fair im Preis."</p>
-                                    <p className="text-sm font-bold">Thomas Müller</p>
-                                </div>
-                                <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                                    <div className="flex text-yellow-500 mb-4">
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star_half</span>
-                                    </div>
-                                    <p className="italic font-medium mb-4">"Sehr kompetentes Team. Besonders der Reifenservice mit Einlagerung klappt jedes Jahr reibungslos."</p>
-                                    <p className="text-sm font-bold">Sarah Schmidt</p>
-                                </div>
-                                <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                                    <div className="flex text-yellow-500 mb-4">
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                        <span className="material-symbols-outlined fill">star</span>
-                                    </div>
-                                    <p className="italic font-medium mb-4">"Echte Profis. Hatte Probleme mit der Elektronik, die andere nicht finden konnten. Hier wurde mir geholfen."</p>
-                                    <p className="text-sm font-bold">Markus Weber</p>
+                            <div className="relative overflow-hidden py-4 mask-fade-x">
+                                <div className="animate-marquee gap-8">
+                                    {[1, 2].map((loop) => (
+                                        <React.Fragment key={loop}>
+                                            {[
+                                                { name: "Thomas Müller", text: "Hervorragender Service! Mein BMW wurde innerhalb eines Tages repariert. Transparent und fair im Preis.", stars: 5 },
+                                                { name: "Sarah Schmidt", text: "Sehr kompetentes Team. Besonders der Reifenservice mit Einlagerung klappt jedes Jahr reibungslos.", stars: 5 },
+                                                { name: "Markus Weber", text: "Echte Profis. Hatte Probleme mit der Elektronik, die andere nicht finden konnten. Hier wurde mir geholfen.", stars: 5 },
+                                                { name: "Julia Wagner", text: "Kurzfristig einen Termin bekommen für den Ölwechsel. Super freundlich!", stars: 5 },
+                                                { name: "Andreas Benz", text: "Top Werkstatt in Harburg. Faire Preise und kompetente Beratung.", stars: 5 }
+                                            ].map((t, i) => (
+                                                <div key={`${loop}-${i}`} className="w-[350px] flex-shrink-0 bg-white dark:bg-gray-800/40 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-white/10">
+                                                    <div className="flex text-yellow-400 gap-0.5 mb-4">
+                                                        {[...Array(5)].map((_, starIdx) => (
+                                                            <span key={starIdx} className="material-symbols-outlined fill text-sm">star</span>
+                                                        ))}
+                                                    </div>
+                                                    <p className="italic font-medium mb-6 text-[#0d121b] dark:text-gray-200 leading-relaxed">"{t.text}"</p>
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                                                            {t.name.charAt(0)}
+                                                        </div>
+                                                        <p className="text-sm font-bold text-[#0d121b] dark:text-white">{t.name}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </React.Fragment>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -343,7 +400,7 @@
                         { title: 'Service-Reset', desc: 'Fachgerechte Rückstellung von Wartungsintervallen nach Herstellervorgaben.', img: 'Mock-Bilder/service-reset.avif' },
                         { title: 'Live-Daten', desc: 'Echtzeit-Überwachung aller Betriebsparameter während des Motorlaufs.', img: 'Mock-Bilder/live-daten.avif' }
                     ].map((t, i) => (
-                        <div key={i} className="group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all shadow-sm">
+                        <div key={i} className="group card-hover-effect flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
                             <div className="h-40 overflow-hidden">
                                 <img src={t.img} alt={t.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                             </div>
@@ -375,7 +432,7 @@
                         { icon: 'settings_input_component', title: 'Originalteile', text: 'Ersatzteile in höchster Erstausrüsterqualität.', img: 'Mock-Bilder/originalteile.avif' },
                         { icon: 'account_balance_wallet', title: 'Transparenz', text: 'Festpreisgarantie und volle Kostenkontrolle.', img: 'Mock-Bilder/transparenz.avif' }
                     ].map((f, i) => (
-                        <div key={i} className="group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-background-dark/50 border border-[#e7ebf3] dark:border-gray-800 shadow-sm hover:shadow-xl transition-all">
+                        <div key={i} className="group card-hover-effect flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-background-dark/50 border border-[#e7ebf3] dark:border-gray-800">
                             <div className="h-44 overflow-hidden">
                                 <img src={f.img} alt={f.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                             </div>
@@ -408,13 +465,13 @@
                         { title: 'Auswuchten', img: 'Mock-Bilder/auswuchten.avif' },
                         { title: 'Achsvermessung', img: 'Mock-Bilder/achsenvermessung.avif' }
                     ].map((s, i) => (
-                        <div key={i} className="group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-white/5 border border-[#e7ebf3] dark:border-white/10 hover:shadow-xl transition-all shadow-sm">
+                        <div key={i} className="group card-hover-effect flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-800/40 border border-[#e7ebf3] dark:border-white/10 shadow-sm">
                             <div className="h-48 overflow-hidden">
                                 <img src={s.img} alt={s.title} className={`h-full w-full object-cover ${s.title === 'Achsvermessung' ? 'object-bottom' : ''} group-hover:scale-110 transition-transform duration-500`} />
                             </div>
                             <div className="p-6">
-                                <h3 className="text-xl font-bold mb-3 flex items-center gap-2"><span className="material-symbols-outlined text-primary">tire_repair</span>{s.title}</h3>
-                                <p className="text-gray-500 mb-4 text-sm">Sorgen Sie für optimalen Grip und Sicherheit in jeder Kurve durch fachgerechte Montage.</p>
+                                <h3 className="text-xl font-bold mb-3 flex items-center gap-2 dark:text-white"><span className="material-symbols-outlined text-primary">tire_repair</span>{s.title}</h3>
+                                <p className="text-gray-500 dark:text-gray-400 mb-4 text-sm leading-relaxed">Sorgen Sie für optimalen Grip und Sicherheit in jeder Kurve durch fachgerechte Montage.</p>
                             </div>
                         </div>
                     ))}
@@ -440,13 +497,13 @@
                         { title: 'Lackierung', img: 'Mock-Bilder/lackierung.avif' },
                         { title: 'Rahmenrichtbank', img: 'Mock-Bilder/rahmenrichtbank.avif' }
                     ].map((t, i) => (
-                        <div key={i} className="group flex flex-col overflow-hidden rounded-2xl border border-[#e7ebf3] dark:border-gray-800 bg-white dark:bg-gray-900/50 hover:shadow-xl transition-all">
+                        <div key={i} className="group card-hover-effect flex flex-col overflow-hidden rounded-2xl border border-[#e7ebf3] dark:border-white/10 bg-white dark:bg-gray-800/40 shadow-sm">
                             <div className="h-44 overflow-hidden">
                                 <img src={t.img} alt={t.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                             </div>
                             <div className="p-8">
                                 <span className="material-symbols-outlined text-primary text-4xl mb-4">car_repair</span>
-                                <h3 className="text-xl font-bold mb-3">{t.title}</h3>
+                                <h3 className="text-xl font-bold mb-3 dark:text-white uppercase tracking-tight">{t.title}</h3>
                                 <p className="text-[#4c669a] dark:text-gray-400 text-sm leading-relaxed">Reparatur auf höchstem handwerklichen Niveau nach Herstellervorgaben.</p>
                             </div>
                         </div>
@@ -474,13 +531,13 @@
                         { title: 'Achsen', desc: 'Wartung von Lagern und Achsen.', img: 'Mock-Bilder/achsen.avif' },
                         { title: 'HU/TÜV', desc: 'Individuelle Abnahme im Haus.', img: 'Mock-Bilder/tuev.png' }
                     ].map((s, i) => (
-                        <div key={i} className="group flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-slate-900/50 border border-[#e7ebf3] dark:border-slate-800 hover:shadow-xl transition-all">
+                        <div key={i} className="group card-hover-effect flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-800/40 border border-[#e7ebf3] dark:border-white/10 shadow-sm">
                             <div className="h-40 overflow-hidden">
                                 <img src={s.img} alt={s.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
                             </div>
                             <div className="p-6">
-                                <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{s.title}</h3>
-                                <p className="text-[#4c669a] dark:text-gray-400 text-xs leading-relaxed">{s.desc}</p>
+                                <h3 className="text-xl font-bold mb-2 dark:text-white group-hover:text-primary transition-colors uppercase tracking-tight">{s.title}</h3>
+                                <p className="text-[#4c669a] dark:text-gray-400 text-sm leading-relaxed">{s.desc}</p>
                             </div>
                         </div>
                     ))}
@@ -507,10 +564,12 @@
                                     { icon: 'mail', label: 'E-Mail', text: 'info@ms-performance.de' },
                                     { icon: 'schedule', label: 'Öffnungszeiten', text: 'Mo-Fr: 08:00 - 18:00 Uhr' }
                                 ].map((item, i) => (
-                                    <div key={i} className="p-6 bg-white dark:bg-gray-900/50 rounded-xl border flex flex-col gap-2">
-                                        <span className="material-symbols-outlined text-primary">{item.icon}</span>
-                                        <h3 className="font-bold">{item.label}</h3>
-                                        <p className="text-sm text-gray-500">{item.text}</p>
+                                    <div key={i} className="p-6 bg-white dark:bg-gray-800/40 card-hover-effect rounded-2xl border border-gray-100 dark:border-white/10 flex flex-col gap-2">
+                                        <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-2">
+                                            <span className="material-symbols-outlined">{item.icon}</span>
+                                        </div>
+                                        <h3 className="font-black uppercase text-xs tracking-widest text-gray-400">{item.label}</h3>
+                                        <p className="text-sm font-bold dark:text-white">{item.text}</p>
                                     </div>
                                 ))}
                             </div>
@@ -530,7 +589,7 @@
                                 )}
                             </div>
                         </div>
-                        <div className="lg:col-span-5 h-[500px] lg:h-auto min-h-[400px]">
+                        <div className="lg:col-span-5 h-[500px] lg:h-auto min-h-[400px] card-hover-effect">
                             <div className="relative h-full rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-xl">
                                 <iframe
                                     src="https://www.google.com/maps?q=MS+Performance+Hamburg+Marienstraße+50+21073+Hamburg&output=embed"
@@ -543,11 +602,11 @@
                                     className="grayscale hover:grayscale-0 transition-all duration-700"
                                 ></iframe>
                                 <div className="absolute bottom-6 left-6 z-10">
-                                    <div className="bg-primary text-white p-4 rounded-xl shadow-2xl flex items-center gap-3 pointer-events-none">
+                                    <div className="bg-primary text-white p-4 rounded-xl shadow-2xl flex items-center gap-3 pointer-events-none backdrop-blur-md">
                                         <span className="material-symbols-outlined text-3xl">garage</span>
                                         <div>
-                                            <p className="font-bold text-sm">MS Performance</p>
-                                            <p className="text-xs opacity-90">Marienstraße 50, Hamburg</p>
+                                            <p className="font-black text-sm uppercase tracking-wider">MS Performance</p>
+                                            <p className="text-[10px] font-bold opacity-80">Marienstraße 50, Hamburg</p>
                                         </div>
                                     </div>
                                 </div>
@@ -582,6 +641,20 @@
                         </Routes>
                     </div>
                     <Footer />
+
+                    {/* Mobile Sticky CTA */}
+                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] w-[calc(100%-3rem)] max-w-md md:hidden animate-fade-in">
+                        <div className="bg-[#101622]/90 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl shadow-primary/20 flex items-center justify-between gap-4">
+                            <div className="flex flex-col">
+                                <span className="text-white font-black text-sm uppercase tracking-wider">Jetzt Termin</span>
+                                <span className="text-primary font-bold text-xs">Wir sind für Sie da</span>
+                            </div>
+                            <a href="tel:+494012345678" className="bg-primary text-white px-6 py-3 rounded-xl font-black text-sm flex items-center gap-2 hover:scale-[1.05] active:scale-[0.95] transition-all">
+                                <span className="material-symbols-outlined text-lg">call</span>
+                                ANRUFEN
+                            </a>
+                        </div>
+                    </div>
                 </div>
             );
         };
